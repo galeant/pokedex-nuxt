@@ -4,21 +4,23 @@ import { useState } from "react";
 import BaseStats from "./BaseStats";
 import About from "./About";
 import Evolution from "./Evolution";
+import Moves from "./Moves";
 
 type TabMenuProps = {
-  stats: {
+  stats?: {
     name: string;
     base_stat: number;
   }[];
-  id: number;
-  height: number;
-  weight: number;
-  abilities: string[];
-  category: string;
-  evoChain: string;
+  id?: number;
+  height?: number;
+  weight?: number;
+  abilities?: string[];
+  category?: string;
+  evoChain?: string;
+  moves?: { name: string; url: string }[];
 };
 
-function TabMenu({
+export default function TabMenu({
   stats,
   height,
   weight,
@@ -26,6 +28,7 @@ function TabMenu({
   id,
   category,
   evoChain,
+  moves,
 }: TabMenuProps) {
   const [activeTab, setActiveTab] = useState("about");
 
@@ -66,10 +69,8 @@ function TabMenu({
         {activeTab === "evolution" && (
           <Evolution evoChain={evoChain}></Evolution>
         )}
-        {activeTab === "moves" && <div>Moves Content</div>}
+        {activeTab === "moves" && <Moves moves={moves}></Moves>}
       </div>
     </div>
   );
 }
-
-export default TabMenu;

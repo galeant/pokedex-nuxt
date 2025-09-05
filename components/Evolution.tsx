@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import Loading from "./Loading";
+import NotFound from "./NotFound";
 
 type EvolutionProps = {
-  evoChain: string;
+  evoChain?: string;
 };
 
 type EvolutionChainNode = {
@@ -13,8 +15,6 @@ type EvolutionChainNode = {
 };
 
 function parseEvolutionChain(node: EvolutionChainNode): any[] {
-  // ambil data saat ini
-
   const url = node.species.url;
   const parts = url.split("/");
   const id = parts[parts.length - 2];
@@ -34,12 +34,7 @@ function parseEvolutionChain(node: EvolutionChainNode): any[] {
   return [current];
 }
 
-async function getEvolutions(evoChain: string) {
-  const res = await fetch(evoChain);
-  return res.json();
-}
-
-const Evolution = ({ evoChain }: EvolutionProps) => {
+export default function Evolution({ evoChain = "" }: EvolutionProps) {
   const [data, setData] = useState<any>([]);
   const [loading, setLoading] = useState(true);
 
@@ -49,7 +44,6 @@ const Evolution = ({ evoChain }: EvolutionProps) => {
         const res = await fetch(evoChain);
         const json = await res.json();
         const evolutionArray = parseEvolutionChain(json.chain);
-        console.log(evolutionArray);
         setData(evolutionArray);
       } catch (err) {
         console.error(err);
@@ -57,18 +51,18 @@ const Evolution = ({ evoChain }: EvolutionProps) => {
         setLoading(false);
       }
     }
-    const a = getEvolutions();
-    // console.log(a);
+
+    getEvolutions();
   }, [evoChain]);
 
-  // if (loading) return <div>Loading evolutions...</div>;
-  // if (!data) return <div>No data</div>;
+  if (loading) return <Loading />;
+  if (!data) return <NotFound />;
 
   return (
     <div className="flex flex-col gap-1 items-center justify-center">
       {data.map((d, index) => {
         return (
-          <div className="flex flex-col items-center text-black">
+          <div key={index} className="flex flex-col items-center text-black">
             <Image
               src={d.image}
               alt="no image"
@@ -79,6 +73,7 @@ const Evolution = ({ evoChain }: EvolutionProps) => {
 
             <div className="text-lg font-semibold">{d.name}</div>
             <div className="text-sm"> #{d.id.toString().padStart(3, "0")}</div>
+
             {index !== data.length - 1 && (
               <div className="text-black text-2xl">↓</div>
             )}
@@ -87,6 +82,4 @@ const Evolution = ({ evoChain }: EvolutionProps) => {
       })}
     </div>
   );
-};
-
-export default Evolution;
+}

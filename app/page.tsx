@@ -1,5 +1,10 @@
+"use client";
+
 import PokemonCard from "@/components/PokemonCard";
 import Image from "next/image";
+import Link from "next/link";
+import { useState, useEffect } from "react";
+import pokedexLogo from "./Pokédex_logo.png";
 
 type Pokemon = {
   id: number;
@@ -14,88 +19,95 @@ type Pokemon = {
   height: number;
   weight: number;
   abilities: string[];
-  // moves: { name: string; url: string }[];
+  moves: { name: string; url: string }[];
   category: string;
   evoChain: string;
 };
 
-type PokemonResponse = {
-  next: string;
-  previous: string;
-  results: Pokemon[];
-};
+export default function Page() {
+  const [pokemons, setPokemons] = useState<Pokemon[]>([]);
+  const [offset, setOffset] = useState(0);
+  const [loading, setLoading] = useState(false);
 
-export async function getPokemonList(): Promise<Pokemon[]> {
-  const res = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=10`, {
-    cache: "no-store",
-  });
-  const data: PokemonResponse = await res.json();
-
-  const detailPromises = data.results.map(async (p) => {
-    const pokemonRes = await fetch(p.url);
-    const pokemon = await pokemonRes.json();
-
-    const speciesRes = await fetch(
-      `https://pokeapi.co/api/v2/pokemon-species/${p.name}`
+  const fetchPokemons = async () => {
+    setLoading(true);
+    const res = await fetch(
+      `https://pokeapi.co/api/v2/pokemon?limit=20&offset=${offset}`
     );
-    const species = await speciesRes.json();
+    const data = await res.json();
 
-    // const moves = await Promise.all(
-    //   pokemon.moves.map(async (m) => {
-    //     const res = await fetch(m.move.url);
-    //     const data = await res.json();
-    //     return data; // data move lengkap
-    //   })
-    // );
+    const detailPromises = data.results.map(async (p: any) => {
+      const pokemonRes = await fetch(p.url);
+      const pokemon = await pokemonRes.json();
 
-    // console.log(moves);
+      return {
+        id: pokemon.id,
+        name: pokemon.name,
+        types: pokemon.types.map((t: any) => t.type.name),
+        image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`,
+        moves: pokemon.moves,
+      } as Pokemon;
+    });
 
-    return {
-      id: pokemon.id,
-      name: pokemon.name,
-      height: pokemon.height,
-      weight: pokemon.weight,
-      types: pokemon.types.map((t: any) => t.type.name),
-      image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`,
-      stats: pokemon.stats.map((s: any) => ({
-        name: s.stat.name,
-        base_stat: s.base_stat,
-      })),
-      abilities: pokemon.abilities.map(
-        (a: any) => a.ability.name[0].toUpperCase() + a.ability.name.slice(1)
-      ),
-      category:
-        species.genera.find((g: any) => g.language.name === "en")?.genus ?? "",
-      // category: "",
-      evoChain: species.evolution_chain.url,
-    } as Pokemon;
-  });
+    const newPokemons = await Promise.all(detailPromises);
 
-  return Promise.all(detailPromises);
-}
+    setPokemons([...pokemons, ...newPokemons]);
+    setLoading(false);
+  };
 
-export default async function Page() {
-  const pokemons: Pokemon[] = await getPokemonList();
+  useEffect(() => {
+    fetchPokemons();
+  }, [offset]);
+
+  const loadMore = () => {
+    setOffset(offset + 20);
+  };
+
   return (
-    <div>
+    <div className="container mx-auto px-4 pt-2">
+      <div className="flex justify-center items-center p-6">
+        <Image
+          src="/Pokédex_logo.png"
+          alt="Bulbasaur"
+          width={300} // biar nggak fixed
+          height={100} // biar nggak fixed
+          className="h-auto w-auto max-w-full"
+        />
+      </div>
+
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 p-6">
         {pokemons.map((pokemon) => {
           return (
-            <PokemonCard
-              key={pokemon.id}
-              id={pokemon.id}
-              name={pokemon.name}
-              types={pokemon.types}
-              image={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`}
-              stats={pokemon.stats}
-              height={pokemon.height}
-              weight={pokemon.weight}
-              abilities={pokemon.abilities}
-              category={pokemon.category}
-              evoChain={pokemon.evoChain}
-            />
+            <Link
+              key={pokemon.name}
+              href={`${pokemon.name}`}
+              className="hover:opacity-75"
+            >
+              <PokemonCard
+                id={pokemon.id}
+                name={pokemon.name}
+                types={pokemon.types}
+                image={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`}
+                stats={pokemon.stats}
+                height={pokemon.height}
+                weight={pokemon.weight}
+                abilities={pokemon.abilities}
+                category={pokemon.category}
+                evoChain={pokemon.evoChain}
+                moves={pokemon.moves}
+              />
+            </Link>
           );
         })}
+      </div>
+      <div className="flex justify-center mb-6">
+        <button
+          onClick={loadMore}
+          className="px-4 py-2 bg-[#6390f0] text-white rounded hover:bg-[#34609c] disabled:bg-gray-400"
+          disabled={loading}
+        >
+          {loading ? "Loading..." : "Load More"}
+        </button>
       </div>
     </div>
   );

@@ -1,9 +1,5 @@
-"use client";
-
-import { useState } from "react";
-
 type BaseStatsProps = {
-  stats: {
+  stats?: {
     name: string;
     base_stat: number;
   }[];
@@ -41,7 +37,7 @@ const StatBar = ({ label, value, max = 100 }: StatBarProps) => {
   );
 };
 
-const BaseStats = ({ stats }: BaseStatsProps) => {
+export default function BaseStats({ stats = [] }: BaseStatsProps) {
   return (
     <div>
       {stats.map((s) => (
@@ -49,6 +45,4 @@ const BaseStats = ({ stats }: BaseStatsProps) => {
       ))}
     </div>
   );
-};
-
-export default BaseStats;
+}

@@ -1,21 +1,17 @@
 type AboutProps = {
-  id: number;
-  height: number;
-  weight: number;
-  abilities: string[];
-  category: string;
+  id?: number;
+  height?: number;
+  weight?: number;
+  abilities?: string[];
+  category?: string;
 };
 
-// async function getPokemonSpecies(id: number) {
-//   const res = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${id}`);
-//   return res.json();
-// }
-
-const About = ({ id, height, weight, abilities, category }: AboutProps) => {
-  // const species = await getPokemonSpecies(id);
-  // console.log(
-  //   species.genera.find((g: any) => g.language.name === "en")?.genus ?? ""
-  // );
+export default function About({
+  height,
+  weight = 0,
+  abilities = [],
+  category,
+}: AboutProps) {
   return (
     <div>
       <div className="flex items-center gap-2 mb-2">
@@ -39,6 +35,4 @@ const About = ({ id, height, weight, abilities, category }: AboutProps) => {
       </div>
     </div>
   );
-};
-
-export default About;
+}
