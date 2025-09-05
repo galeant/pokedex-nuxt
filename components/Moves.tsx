@@ -15,10 +15,10 @@ export default function Moves({ moves = [] }: MoveProps) {
     async function getAllMoves() {
       try {
         const moveListDetail = await Promise.all(
-          moves.map(async (m) => {
+          moves.map(async (m: any) => {
             const name = m.move.name
               .split("-") // pisah kata berdasarkan "-"
-              .map((word) => word.charAt(0).toUpperCase() + word.slice(1)) // kapital tiap kata
+              .map((word: any) => word.charAt(0).toUpperCase() + word.slice(1)) // kapital tiap kata
               .join(" ");
             const moveRes = await fetch(m.move.url);
             const move = await moveRes.json();
@@ -50,7 +50,7 @@ export default function Moves({ moves = [] }: MoveProps) {
           </tr>
         </thead>
         <tbody>
-          {moveList.map((m, i) => (
+          {moveList.map((m: any, i: number) => (
             <tr key={i}>
               <td className="border border-black px-2">{m.name}</td>
               <td className="border border-black px-2">{m.power}</td>

@@ -60,7 +60,7 @@ export default function Evolution({ evoChain = "" }: EvolutionProps) {
 
   return (
     <div className="flex flex-col gap-1 items-center justify-center">
-      {data.map((d, index) => {
+      {data.map((d: any, index: number) => {
         return (
           <div key={index} className="flex flex-col items-center text-black">
             <Image
