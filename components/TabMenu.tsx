@@ -3,6 +3,7 @@
 import { useState } from "react";
 import BaseStats from "./BaseStats";
 import About from "./About";
+import Evolution from "./Evolution";
 
 type TabMenuProps = {
   stats: {
@@ -14,6 +15,7 @@ type TabMenuProps = {
   weight: number;
   abilities: string[];
   category: string;
+  evoChain: string;
 };
 
 function TabMenu({
@@ -23,6 +25,7 @@ function TabMenu({
   abilities,
   id,
   category,
+  evoChain,
 }: TabMenuProps) {
   const [activeTab, setActiveTab] = useState("about");
 
@@ -60,7 +63,9 @@ function TabMenu({
           ></About>
         )}
         {activeTab === "stats" && <BaseStats stats={stats}></BaseStats>}
-        {activeTab === "evolution" && <div>Evolution Content</div>}
+        {activeTab === "evolution" && (
+          <Evolution evoChain={evoChain}></Evolution>
+        )}
         {activeTab === "moves" && <div>Moves Content</div>}
       </div>
     </div>

@@ -15,6 +15,7 @@ type PokemonCardProps = {
   abilities: string[];
   // // moves: { name: string; url: string }[];
   category: string;
+  evoChain: string;
 };
 
 const typeColors: Record<string, string> = {
@@ -51,6 +52,7 @@ export default function PokemonCard({
   weight,
   abilities,
   category,
+  evoChain,
 }: PokemonCardProps) {
   return (
     <div
@@ -96,6 +98,7 @@ export default function PokemonCard({
         id={id}
         abilities={abilities}
         category={category}
+        evoChain={evoChain}
       ></TabMenu>
     </div>
   );

@@ -16,6 +16,7 @@ type Pokemon = {
   abilities: string[];
   // moves: { name: string; url: string }[];
   category: string;
+  evoChain: string;
 };
 
 type PokemonResponse = {
@@ -66,6 +67,7 @@ export async function getPokemonList(): Promise<Pokemon[]> {
       category:
         species.genera.find((g: any) => g.language.name === "en")?.genus ?? "",
       // category: "",
+      evoChain: species.evolution_chain.url,
     } as Pokemon;
   });
 
@@ -90,6 +92,7 @@ export default async function Page() {
               weight={pokemon.weight}
               abilities={pokemon.abilities}
               category={pokemon.category}
+              evoChain={pokemon.evoChain}
             />
           );
         })}
