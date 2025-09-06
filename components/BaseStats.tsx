@@ -21,7 +21,12 @@ const labels: Record<string, string> = {
 };
 
 const StatBar = ({ label, value, max = 100 }: StatBarProps) => {
-  const color = value < 50 ? "bg-red-400" : "bg-green-500";
+  let limit = max;
+  if (value > max) {
+    limit = Math.ceil(value / 100) * 100;
+  }
+  const treshold = limit / 2;
+  const color = value < treshold ? "bg-red-400" : "bg-green-500";
 
   return (
     <div className="flex items-center gap-2 mb-2">
@@ -30,7 +35,7 @@ const StatBar = ({ label, value, max = 100 }: StatBarProps) => {
       <div className="flex-1 h-2 bg-gray-200 rounded">
         <div
           className={`${color} h-2 rounded`}
-          style={{ width: `${(value / max) * 100}%` }}
+          style={{ width: `${(value / limit) * 100}%` }}
         />
       </div>
     </div>

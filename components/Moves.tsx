@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import Loading from "./Loading";
-import NotFound from "./NotFound";
 
 type MoveProps = {
   moves?: { name: string; url: string }[];
@@ -10,6 +9,7 @@ type MoveProps = {
 
 export default function Moves({ moves = [] }: MoveProps) {
   const [moveList, setMoveList] = useState<any>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function getAllMoves() {
@@ -31,12 +31,15 @@ export default function Moves({ moves = [] }: MoveProps) {
           })
         );
         setMoveList(moveListDetail);
+        setLoading(false);
       } catch (err) {
         console.error(err);
       }
     }
     getAllMoves();
   }, [moves]);
+
+  if (loading) return <Loading />;
 
   return (
     <div className="container mx-auto px-4">

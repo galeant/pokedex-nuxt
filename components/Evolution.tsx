@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Loading from "./Loading";
 import NotFound from "./NotFound";
+import Link from "next/link";
 
 type EvolutionProps = {
   evoChain?: string;
@@ -63,16 +64,24 @@ export default function Evolution({ evoChain = "" }: EvolutionProps) {
       {data.map((d: any, index: number) => {
         return (
           <div key={index} className="flex flex-col items-center text-black">
-            <Image
-              src={d.image}
-              alt="no image"
-              width={50}
-              height={50}
-              className="drop-shadow-md"
-            />
+            <div>
+              <Link
+                key={d.name}
+                href={`${d.name}`}
+                className="flex flex-col items-center hover:opacity-75"
+              >
+                <Image
+                  src={d.image}
+                  alt="no image"
+                  width={50}
+                  height={50}
+                  className="drop-shadow-md"
+                />
 
-            <div className="text-lg font-semibold">{d.name}</div>
-            <div className="text-sm"> #{d.id.toString().padStart(3, "0")}</div>
+                <div className="text-lg font-semibold">{d.name}</div>
+                <div className="text-sm"> #{d.id}</div>
+              </Link>
+            </div>
 
             {index !== data.length - 1 && (
               <div className="text-black text-2xl">↓</div>

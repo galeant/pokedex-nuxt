@@ -4,7 +4,6 @@ import PokemonCard from "@/components/PokemonCard";
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import pokedexLogo from "./Pokédex_logo.png";
 
 type Pokemon = {
   id: number;

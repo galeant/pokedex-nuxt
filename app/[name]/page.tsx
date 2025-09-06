@@ -50,7 +50,12 @@ export default function PokemonDetail({ params }: Props) {
         height: pokemonJson.height,
         weight: pokemonJson.weight,
         types: pokemonJson.types.map((t: any) => t.type.name),
-        abilities: pokemonJson.abilities.map((a: any) => a.ability.name),
+        abilities: pokemonJson.abilities.map((a: any) => {
+          return a.ability.name
+            .split("-") // pisah kata berdasarkan "-"
+            .map((word: any) => word.charAt(0).toUpperCase() + word.slice(1)) // kapital tiap kata
+            .join(" ");
+        }),
         stats: pokemonJson.stats.map((s: any) => ({
           name: s.stat.name,
           base_stat: s.base_stat,

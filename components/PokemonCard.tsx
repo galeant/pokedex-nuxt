@@ -83,9 +83,14 @@ export default function PokemonCard({
 }: PokemonCardProps) {
   return (
     <div
-      className={`relative rounded-2xl shadow-lg p-3  ${
+      className={`relative rounded-2xl shadow-lg p-3 bg-no-repeat bg-center  ${
         typeColors[types[0]] ?? "bg-gray-400"
       }`}
+      style={{
+        backgroundImage: "url('/bg-poke-gry.png')",
+        backgroundSize: "50%",
+        backgroundPosition: showDetail ? "center top" : "center center",
+      }}
     >
       <div className="flex flex-row justify-between ">
         <h2 className="text-white font-bold text-xl capitalize">{name}</h2>
