@@ -97,14 +97,14 @@ export default function PokemonCard({
         <span className="text-white/60 font-bold text-sm">#{id}</span>
       </div>
 
-      <div className="flex flex-row justify-between ">
+      <div className="grid grid-cols-2 items-center">
         <div className="flex flex-col gap-1">
           {types.map((t) => {
             const typeColor = colorType[t];
             return (
               <span
                 key={t}
-                className={`p-1 text-white text-sm font-semibold uppercase text-center rounded-md bg-[#a3a3a3]/50`}
+                className="p-1 text-white text-sm font-semibold uppercase text-center rounded-md bg-[#a3a3a3]/50"
               >
                 {t}
               </span>
@@ -112,13 +112,15 @@ export default function PokemonCard({
           })}
         </div>
 
-        <Image
-          src={image}
-          alt={name}
-          width={120}
-          height={120}
-          className="drop-shadow-md"
-        />
+        <div className="flex justify-center">
+          <Image
+            src={image}
+            alt={name}
+            width={120}
+            height={120}
+            className="drop-shadow-md"
+          />
+        </div>
       </div>
 
       {showDetail && (
